@@ -1,0 +1,64 @@
+* {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  background-color: gray;
+}
+
+.road {
+  width: 400px;
+  height: 100vh;
+
+  position: absolute;
+  left: 600px;
+
+  background-color: #414141;
+}
+
+.car {
+  background-image: url('../img/car.png');
+  background-size: contain;
+  width: 150px;
+  height: 300px;
+
+  position: absolute;
+  left: 725px;
+  top: -300px;
+}
+
+#tirerack {
+  background-color: red;
+  width: 200px;
+  height: 100px;
+
+  position: absolute;
+  left: 200px;
+  bottom: 200px;
+
+  display: flex;
+  align-content: center;
+}
+
+.tire {
+  background-color: black;
+  width: 10px;
+  height: 30px;
+  margin: 20px;
+
+  position: relative;
+}
+
+.player {
+  width: 50px;
+  height: 50px;
+  background-color: yellow;
+
+  position: absolute;
+}
+
+.has-tire {
+  background-color: green;
+}
