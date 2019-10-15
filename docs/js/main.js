@@ -1,12 +1,19 @@
 "use strict";
 var Car = (function () {
     function Car() {
+        this.gas = 0;
         this.y = -300;
         this.tires = [];
         this.done = false;
         this._element = document.createElement('div');
         this._element.classList.add('car');
         document.body.appendChild(this._element);
+        this.gasmeterElement = document.createElement('div');
+        this.gasmeterElement.classList.add('car-gasmeter');
+        this._element.appendChild(this.gasmeterElement);
+        this.gasmeterElementInner = document.createElement('div');
+        this.gasmeterElementInner.classList.add('car-gasmeter-inner');
+        this.gasmeterElement.appendChild(this.gasmeterElementInner);
     }
     Car.prototype.enter = function () {
         if (this.y < 300) {
@@ -25,15 +32,19 @@ var Car = (function () {
         }
     };
     Car.prototype.update = function () {
-        if (this.tires.length !== 4) {
+        if (this.tires.length !== 4 || this.gas <= 100) {
             this.enter();
         }
         else {
             this.leave();
         }
+        this.gasmeterElementInner.style.height = (this.gas / 2) + 'px';
     };
     Car.prototype.addTire = function (tire) {
         this.tires.push(tire);
+    };
+    Car.prototype.fill = function () {
+        this.gas++;
     };
     return Car;
 }());
@@ -46,6 +57,7 @@ var Game = (function () {
         this._then = Date.now();
         this.spawnTires();
         this.player = new Player();
+        this.gasmeter = new Gas();
         this.gameLoop();
     }
     Game.getInstance = function () {
@@ -61,6 +73,7 @@ var Game = (function () {
         var elapsed = now - this._then;
         if (elapsed > this._fpsInterval) {
             this.player.update();
+            this.gasmeter.update();
             this.checkCar();
             this._then = now - (elapsed % this._fpsInterval);
         }
@@ -83,6 +96,7 @@ var Game = (function () {
             if (this._car.done) {
                 this._car = null;
                 this.spawnTires();
+                this.gasmeter.reset();
             }
         }
     };
@@ -93,7 +107,20 @@ window.addEventListener("load", function () {
 });
 var Gas = (function () {
     function Gas() {
+        this.element = document.getElementById('game-gasmeter');
+        this.amount = 100;
     }
+    Gas.prototype.update = function () {
+        var height = (this.amount * 4.8) + 'px';
+        var innerElement = document.getElementById('game-gasmeter-inner');
+        innerElement.style.height = height;
+    };
+    Gas.prototype.drain = function () {
+        this.amount--;
+    };
+    Gas.prototype.reset = function () {
+        this.amount = 100;
+    };
     return Gas;
 }());
 var Player = (function () {
@@ -103,33 +130,17 @@ var Player = (function () {
         this.speedY = 0;
         this.posX = 0;
         this.posY = 0;
+        this.hasGasoline = false;
         this._element = document.createElement('div');
         this._element.classList.add('player');
         document.body.appendChild(this._element);
         window.addEventListener('keydown', function (e) { return _this.onKeyDown(e); });
-        window.addEventListener("keyup", function (e) { return _this.onKeyUp(e); });
+        window.addEventListener('keyup', function (e) { return _this.onKeyUp(e); });
     }
     Player.prototype.update = function () {
         this._element.style.transform = "translate(" + (this.posX += this.speedX) + "px, " + (this.posY += this.speedY) + "px)";
-        var tires = Game.getInstance().tires;
-        for (var i = 0; i < tires.length; i++) {
-            if (this.isCollision(tires[i]._element)) {
-                if (!this.currentTire) {
-                    tires[i].grabbed();
-                    this.currentTire = tires[i];
-                }
-            }
-        }
-        var car = Game.getInstance()._car;
-        if (car) {
-            if (this.isCollision(car._element)) {
-                if (this.currentTire) {
-                    car.addTire(this.currentTire);
-                    this.currentTire = null;
-                }
-            }
-        }
         this.currentTire ? this._element.classList.add('has-tire') : this._element.classList.remove('has-tire');
+        this.hasGasoline ? this._element.classList.add('has-gasoline') : this._element.classList.remove('has-gasoline');
     };
     Player.prototype.onKeyDown = function (e) {
         switch (e.keyCode) {
@@ -145,21 +156,23 @@ var Player = (function () {
             case 39:
                 this.speedX = 15;
                 break;
+            case 32:
+                this.interactHold();
+                break;
         }
     };
     Player.prototype.onKeyUp = function (e) {
         switch (e.keyCode) {
             case 37:
+            case 39:
                 this.speedX = 0;
                 break;
             case 38:
-                this.speedY = 0;
-                break;
             case 40:
                 this.speedY = 0;
                 break;
-            case 39:
-                this.speedX = 0;
+            case 32:
+                this.interact();
                 break;
         }
     };
@@ -171,6 +184,40 @@ var Player = (function () {
             return true;
         }
         return false;
+    };
+    Player.prototype.interact = function () {
+        var gasoline = document.getElementById('gasoline');
+        if (this.isCollision(gasoline) && !this.currentTire) {
+            this.hasGasoline = !this.hasGasoline;
+        }
+        var tires = Game.getInstance().tires;
+        for (var i = 0; i < tires.length; i++) {
+            if (this.isCollision(tires[i]._element) && !this.hasGasoline) {
+                if (!this.currentTire) {
+                    tires[i].grabbed();
+                    this.currentTire = tires[i];
+                }
+            }
+        }
+        var car = Game.getInstance()._car;
+        if (car) {
+            if (this.isCollision(car._element)) {
+                if (this.currentTire) {
+                    car.addTire(this.currentTire);
+                    this.currentTire = null;
+                }
+            }
+        }
+    };
+    Player.prototype.interactHold = function () {
+        var car = Game.getInstance()._car;
+        var gasmeter = Game.getInstance().gasmeter;
+        if (car && this.hasGasoline) {
+            if (this.isCollision(car._element)) {
+                gasmeter.drain();
+                car.fill();
+            }
+        }
     };
     return Player;
 }());

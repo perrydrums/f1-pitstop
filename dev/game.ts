@@ -19,6 +19,8 @@ class Game {
 
   private player:Player;
 
+  public gasmeter:Gas;
+
   /**
    * Make the constructor private.
    */
@@ -29,6 +31,8 @@ class Game {
       this.spawnTires();
 
       this.player = new Player();
+
+      this.gasmeter = new Gas();
 
       this.gameLoop();
   }
@@ -58,6 +62,7 @@ class Game {
       // If enough time has elapsed, draw the next frame.
       if (elapsed > this._fpsInterval) {
         this.player.update();
+        this.gasmeter.update();
 
         // Every minute spawn a new car.
         this.checkCar();
@@ -89,6 +94,7 @@ class Game {
       if (this._car.done) {
         this._car = null;
         this.spawnTires();
+        this.gasmeter.reset();
       }
     }
     

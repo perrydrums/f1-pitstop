@@ -9,6 +9,7 @@ class Player {
   private posY:number = 0;
 
   private currentTire:Tire;
+  private hasGasoline:boolean = false;
 
   public constructor() {
     this._element = document.createElement('div');
@@ -16,7 +17,7 @@ class Player {
     document.body.appendChild(this._element);
 
     window.addEventListener('keydown', (e:KeyboardEvent) => this.onKeyDown(e));
-    window.addEventListener("keyup", (e:KeyboardEvent) => this.onKeyUp(e));
+    window.addEventListener('keyup', (e:KeyboardEvent) => this.onKeyUp(e));
   }
 
   /**
@@ -26,30 +27,11 @@ class Player {
     // Movement.
     this._element.style.transform = `translate(${this.posX += this.speedX}px, ${this.posY += this.speedY}px)`;
 
-    // Tire collision detection.
-    const tires = Game.getInstance().tires;
-    for (let i = 0; i < tires.length; i ++) {
-      if (this.isCollision(tires[i]._element)) {
-        if (!this.currentTire) {
-          tires[i].grabbed();
-          this.currentTire = tires[i];
-        }
-      }
-    }
-
-    // Car collision detection.
-    const car = Game.getInstance()._car;
-    if (car) {
-      if (this.isCollision(car._element)) {
-        if (this.currentTire) {
-          car.addTire(this.currentTire);
-          this.currentTire = null;
-        }
-      }
-    }
-
     // Check for tire.
     this.currentTire ? this._element.classList.add('has-tire') : this._element.classList.remove('has-tire');
+
+    // Check if player holds gasoline.
+    this.hasGasoline ? this._element.classList.add('has-gasoline') : this._element.classList.remove('has-gasoline');
   }
 
   /**
@@ -71,6 +53,9 @@ class Player {
       case 39:
         this.speedX = 15;
         break;
+      case 32:
+        this.interactHold();
+        break;
     }
   }
 
@@ -82,16 +67,15 @@ class Player {
   private onKeyUp(e:KeyboardEvent):void {
     switch(e.keyCode){
       case 37:
+      case 39:
         this.speedX = 0;
         break;
       case 38:
-        this.speedY = 0;
-        break;
       case 40:
         this.speedY = 0;
         break;
-      case 39:
-        this.speedX = 0;
+      case 32:
+        this.interact();
         break;
     }
   }
@@ -114,6 +98,54 @@ class Player {
     }
 
     return false;
+  }
+
+  /**
+   * Handles collision and interacts with various items.
+   */
+  private interact():void {
+    // Gasoline collision detection.
+    const gasoline = document.getElementById('gasoline');
+    if (this.isCollision(gasoline) && !this.currentTire) {
+      this.hasGasoline = !this.hasGasoline;
+    }
+
+    // Tire collision detection.
+    const tires = Game.getInstance().tires;
+    for (let i = 0; i < tires.length; i ++) {
+      if (this.isCollision(tires[i]._element) && !this.hasGasoline) {
+        if (!this.currentTire) {
+          tires[i].grabbed();
+          this.currentTire = tires[i];
+        }
+      }
+    }
+    
+    // Car collision detection.
+    const car = Game.getInstance()._car;
+    if (car) {
+      if (this.isCollision(car._element)) {
+        if (this.currentTire) {
+          car.addTire(this.currentTire);
+          this.currentTire = null;
+        }
+      }
+    }
+  }
+
+  /**
+   * Handles collisions and interacts with various items when holding a button.
+   */
+  private interactHold():void {
+    // Car collision detection when holding gasoline.
+    const car = Game.getInstance()._car;
+    const gasmeter = Game.getInstance().gasmeter;
+    if (car && this.hasGasoline) {
+      if (this.isCollision(car._element)) {
+        gasmeter.drain();
+        car.fill();
+      }
+    }
   }
 
 }

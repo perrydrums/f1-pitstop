@@ -62,3 +62,61 @@ body {
 .has-tire {
   background-color: green;
 }
+
+.has-gasoline {
+  background-color: brown;
+}
+
+#gasoline {
+  width: 50px;
+  height: 70px;
+  clip-path: polygon(70% 0, 100% 28%, 100% 100%, 0 100%, 0 0);
+
+  background-color: brown;
+  
+  position: absolute;
+  right: 200px;
+  bottom: 200px;
+}
+
+#game-gasmeter {
+  width: 50px;
+  height: 500px;
+
+  background-color: black;
+
+  position: absolute;
+  right: 200px;
+  top: 50px;
+}
+
+#game-gasmeter > #game-gasmeter-inner {
+  margin: 10px;
+  width: 30px;
+  height: 480px;
+  max-height: 480px;
+  background-color: red;
+
+  position: absolute;
+  bottom: 0;
+}
+
+.car-gasmeter {
+  width: 5px;
+  height: 50px;
+
+  background-color: black;
+
+  position: absolute;
+  top: 0;
+}
+
+.car-gasmeter > .car-gasmeter-inner {
+  width: 5px;
+  height: 0;
+
+  background-color: red;
+
+  position: absolute;
+  bottom: 0;
+}
