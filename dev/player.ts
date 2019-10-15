@@ -19,19 +19,17 @@ class Player {
     window.addEventListener("keyup", (e:KeyboardEvent) => this.onKeyUp(e));
   }
 
-  public update() {
+  /**
+   * Runs every game tick.
+   */
+  public update():void {
     // Movement.
     this._element.style.transform = `translate(${this.posX += this.speedX}px, ${this.posY += this.speedY}px)`;
 
     // Tire collision detection.
     const tires = Game.getInstance().tires;
     for (let i = 0; i < tires.length; i ++) {
-      if (
-        this._element.getBoundingClientRect().left < tires[i]._element.getBoundingClientRect().right &&
-        this._element.getBoundingClientRect().right > tires[i]._element.getBoundingClientRect().left &&
-        this._element.getBoundingClientRect().bottom > tires[i]._element.getBoundingClientRect().top &&
-        this._element.getBoundingClientRect().top < tires[i]._element.getBoundingClientRect().bottom
-      ) {
+      if (this.isCollision(tires[i]._element)) {
         if (!this.currentTire) {
           tires[i].grabbed();
           this.currentTire = tires[i];
@@ -42,12 +40,7 @@ class Player {
     // Car collision detection.
     const car = Game.getInstance()._car;
     if (car) {
-      if (
-        this._element.getBoundingClientRect().left < car._element.getBoundingClientRect().right &&
-        this._element.getBoundingClientRect().right > car._element.getBoundingClientRect().left &&
-        this._element.getBoundingClientRect().bottom > car._element.getBoundingClientRect().top &&
-        this._element.getBoundingClientRect().top < car._element.getBoundingClientRect().bottom
-      ) {
+      if (this.isCollision(car._element)) {
         if (this.currentTire) {
           car.addTire(this.currentTire);
           this.currentTire = null;
@@ -56,15 +49,15 @@ class Player {
     }
 
     // Check for tire.
-    if (this.currentTire) {
-      this._element.classList.add('has-tire');
-    }
-    else {
-      this._element.classList.remove('has-tire');
-    }
+    this.currentTire ? this._element.classList.add('has-tire') : this._element.classList.remove('has-tire');
   }
 
-  private onKeyDown(e:KeyboardEvent) {
+  /**
+   * Set speed when holding down arrow keys.
+   * 
+   * @param KeyboardEvent e 
+   */
+  private onKeyDown(e:KeyboardEvent):void {
     switch(e.keyCode){
       case 37:
         this.speedX = -15;
@@ -81,7 +74,12 @@ class Player {
     }
   }
 
-  private onKeyUp(e:KeyboardEvent) {
+  /**
+   * Set speed to 0 when letting go of the arrow keys.
+   * 
+   * @param KeyboardEvent e
+   */
+  private onKeyUp(e:KeyboardEvent):void {
     switch(e.keyCode){
       case 37:
         this.speedX = 0;
@@ -96,6 +94,26 @@ class Player {
         this.speedX = 0;
         break;
     }
+  }
+
+  /**
+   * Checks if there's a collision between the class' HTMLElement and the HTMLElement in the parameter.
+   * 
+   * @param HTMLElement element 
+   * 
+   * @return boolean
+   */
+  private isCollision(element:HTMLElement):boolean {
+    if (
+      this._element.getBoundingClientRect().left < element.getBoundingClientRect().right &&
+      this._element.getBoundingClientRect().right > element.getBoundingClientRect().left &&
+      this._element.getBoundingClientRect().bottom > element.getBoundingClientRect().top &&
+      this._element.getBoundingClientRect().top < element.getBoundingClientRect().bottom
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
 }
