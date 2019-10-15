@@ -11,10 +11,16 @@ class Timer {
     this.element = document.getElementById('timer');
   }
 
+  /**
+   * Update the timer's HTML.
+   */
   public update() {
     this.element.innerHTML = this.formatTime(this.time) + '<p>' + this.formatTime(this.fastestTime) + '</p>';
   }
 
+  /**
+   * Start the timer.
+   */
   public start() {
     if (!this.running) {
       this.startTime = new Date().getTime();
@@ -23,6 +29,9 @@ class Timer {
     }
   }
 
+  /**
+   * Stop the timer and save fastest time.
+   */
   public stop() {
     if (this.running) {
       clearInterval(this.interval);
@@ -33,11 +42,21 @@ class Timer {
     }
   }
 
+  /**
+   * Add time.
+   */
   private count() {
     this.time = new Date().getTime() - this.startTime;
   }
 
-  private formatTime(milliseconds:number) {
+  /**
+   * Format milliseconds to readable time.
+   * 
+   * @param {number} milliseconds 
+   * 
+   * @returns {string}
+   */
+  private formatTime(milliseconds:number):string {
     let millis = (milliseconds % 1000).toString();
     let seconds = (Math.floor(milliseconds / 1000) % 60).toString();
     let minutes = (Math.floor(milliseconds / 1000 / 60)).toString();

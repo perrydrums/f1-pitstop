@@ -8,6 +8,9 @@ class Tire {
     document.getElementById('tirerack').appendChild(this._element);
   }
 
+  /**
+   * Runs if the player has grabbed the tire from the tirerack.
+   */
   public grabbed() {
     this._element.remove();
   }

@@ -13,10 +13,12 @@ class Car {
   public done:boolean = false;
 
   public constructor() {
+    // Create car element.
     this._element = document.createElement('div');
     this._element.classList.add('car');
     document.body.appendChild(this._element);
 
+    // Create gasmeter elements.
     this.gasmeterElement = document.createElement('div');
     this.gasmeterElement.classList.add('car-gasmeter');
     this._element.appendChild(this.gasmeterElement);
@@ -26,6 +28,9 @@ class Car {
     this.gasmeterElement.appendChild(this.gasmeterElementInner);
   }
 
+  /**
+   * Move the car into place.
+   */
   public enter() {
     if (this.y < 300) {
       this.y += 50;
@@ -33,6 +38,9 @@ class Car {
     }
   }
 
+  /**
+   * Remove the car from the view and set car as DONE.
+   */
   private leave() {
     if (this.y < 1200) {
       this.y += 50;
@@ -44,6 +52,9 @@ class Car {
     }
   }
 
+  /**
+   * Runs every game tick.
+   */
   public update() {
     if (this.tires.length !== 4 || this.gas <= 50) {
       this.enter();
@@ -59,10 +70,18 @@ class Car {
     this.gasmeterElementInner.style.backgroundColor = `rgba(${red}, ${green}, 0, 1)`
   }
 
+  /**
+   * Add tire to the car.
+   * 
+   * @param {Tire} tire 
+   */
   public addTire(tire:Tire) {
     this.tires.push(tire);
   }
 
+  /**
+   * Increase amount of gas.
+   */
   public fill() {
     this.gas ++;
   }

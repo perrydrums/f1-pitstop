@@ -76,12 +76,18 @@ class Game {
       }
   }
 
+  /**
+   * Create new tires.
+   */
   private spawnTires() {
     for (let i = 0; i < 4; i ++) {
       this.tires.push(new Tire());
     }
   }
 
+  /**
+   * Check if the car's ready.
+   */
   private checkCar() {
     if (this._carTime > this._fps * 5) {
       if (!this._car) {
@@ -102,7 +108,6 @@ class Game {
         this.timer.stop();
       }
     }
-    
   }
 
 }

@@ -37,7 +37,7 @@ class Player {
   /**
    * Set speed when holding down arrow keys.
    * 
-   * @param KeyboardEvent e 
+   * @param {KeyboardEvent} e 
    */
   private onKeyDown(e:KeyboardEvent):void {
     switch(e.keyCode){
@@ -62,7 +62,7 @@ class Player {
   /**
    * Set speed to 0 when letting go of the arrow keys.
    * 
-   * @param KeyboardEvent e
+   * @param {KeyboardEvent} e
    */
   private onKeyUp(e:KeyboardEvent):void {
     switch(e.keyCode){
@@ -83,9 +83,9 @@ class Player {
   /**
    * Checks if there's a collision between the class' HTMLElement and the HTMLElement in the parameter.
    * 
-   * @param HTMLElement element 
+   * @param {HTMLElement} element 
    * 
-   * @return boolean
+   * @return {boolean}
    */
   private isCollision(element:HTMLElement):boolean {
     if (
