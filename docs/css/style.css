@@ -13,7 +13,8 @@ body {
   height: 100vh;
 
   position: absolute;
-  left: 600px;
+  left: 50%;
+  margin-left: -200px;
 
   background-color: #414141;
 }
@@ -25,7 +26,9 @@ body {
   height: 300px;
 
   position: absolute;
-  left: 725px;
+  left: 50%;
+  margin-left: -75px;
+
   top: -300px;
 }
 
@@ -119,4 +122,27 @@ body {
 
   position: absolute;
   bottom: 0;
+}
+
+#timer {
+  width: 300px;
+  height: 100px;
+
+  background-color: rgba(0, 0, 0, 0.5);
+
+  z-index: 10;
+
+  position: absolute;
+  left: 50%;
+  margin-left: -150px;
+
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 40px;
+  color: white;
+  text-align: center;
+  line-height: 50px;
+}
+
+#timer > p {
+  font-size: 20px;
 }

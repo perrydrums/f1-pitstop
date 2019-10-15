@@ -61,6 +61,7 @@ var Game = (function () {
         this.spawnTires();
         this.player = new Player();
         this.gasmeter = new Gas();
+        this.timer = new Timer();
         this.gameLoop();
     }
     Game.getInstance = function () {
@@ -77,6 +78,7 @@ var Game = (function () {
         if (elapsed > this._fpsInterval) {
             this.player.update();
             this.gasmeter.update();
+            this.timer.update();
             this.checkCar();
             this._then = now - (elapsed % this._fpsInterval);
         }
@@ -90,6 +92,7 @@ var Game = (function () {
         if (this._carTime > this._fps * 5) {
             if (!this._car) {
                 this._car = new Car();
+                this.timer.start();
             }
             this._carTime = 0;
         }
@@ -100,6 +103,7 @@ var Game = (function () {
                 this._car = null;
                 this.spawnTires();
                 this.gasmeter.reset();
+                this.timer.stop();
             }
         }
     };
@@ -223,6 +227,56 @@ var Player = (function () {
         }
     };
     return Player;
+}());
+var Timer = (function () {
+    function Timer() {
+        this.time = 0;
+        this.fastestTime = 0;
+        this.running = false;
+        this.element = document.getElementById('timer');
+    }
+    Timer.prototype.update = function () {
+        this.element.innerHTML = this.formatTime(this.time) + '<p>' + this.formatTime(this.fastestTime) + '</p>';
+    };
+    Timer.prototype.start = function () {
+        var _this = this;
+        if (!this.running) {
+            this.startTime = new Date().getTime();
+            this.interval = setInterval(function () { return _this.count(); }, 10);
+            this.running = true;
+        }
+    };
+    Timer.prototype.stop = function () {
+        if (this.running) {
+            clearInterval(this.interval);
+            this.running = false;
+            if (this.fastestTime === 0 || this.fastestTime > this.time) {
+                this.fastestTime = this.time;
+            }
+        }
+    };
+    Timer.prototype.count = function () {
+        this.time = new Date().getTime() - this.startTime;
+    };
+    Timer.prototype.formatTime = function (milliseconds) {
+        var millis = (milliseconds % 1000).toString();
+        var seconds = (Math.floor(milliseconds / 1000) % 60).toString();
+        var minutes = (Math.floor(milliseconds / 1000 / 60)).toString();
+        if (millis.length === 1) {
+            millis = '00' + millis;
+        }
+        else if (millis.length === 2) {
+            millis = '0' + millis;
+        }
+        if (seconds.length === 1) {
+            seconds = '0' + seconds;
+        }
+        if (minutes.length === 1) {
+            minutes = '0' + minutes;
+        }
+        return minutes + ":" + seconds + ":" + millis;
+    };
+    return Timer;
 }());
 var Tire = (function () {
     function Tire() {
