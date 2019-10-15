@@ -32,13 +32,16 @@ var Car = (function () {
         }
     };
     Car.prototype.update = function () {
-        if (this.tires.length !== 4 || this.gas <= 100) {
+        if (this.tires.length !== 4 || this.gas <= 50) {
             this.enter();
         }
         else {
             this.leave();
         }
-        this.gasmeterElementInner.style.height = (this.gas / 2) + 'px';
+        this.gasmeterElementInner.style.height = this.gas + 'px';
+        var red = 100;
+        var green = this.gas * 5;
+        this.gasmeterElementInner.style.backgroundColor = "rgba(" + red + ", " + green + ", 0, 1)";
     };
     Car.prototype.addTire = function (tire) {
         this.tires.push(tire);

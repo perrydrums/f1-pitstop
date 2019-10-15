@@ -45,14 +45,18 @@ class Car {
   }
 
   public update() {
-    if (this.tires.length !== 4 || this.gas <= 100) {
+    if (this.tires.length !== 4 || this.gas <= 50) {
       this.enter();
     }
     else {
       this.leave();
     }
 
-    this.gasmeterElementInner.style.height = (this.gas / 2) + 'px';
+    this.gasmeterElementInner.style.height = this.gas + 'px';
+    
+    const red = 100;
+    const green = this.gas * 5;
+    this.gasmeterElementInner.style.backgroundColor = `rgba(${red}, ${green}, 0, 1)`
   }
 
   public addTire(tire:Tire) {
