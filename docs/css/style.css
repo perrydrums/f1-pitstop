@@ -1,3 +1,13 @@
+@font-face {
+  src: url('../font/digits.ttf');
+  font-family: 'Digits';
+}
+
+@font-face {
+  src: url('../font/f1.ttf');
+  font-family: 'F1';
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -76,7 +86,7 @@ body {
   clip-path: polygon(70% 0, 100% 28%, 100% 100%, 0 100%, 0 0);
 
   background-color: brown;
-  
+
   position: absolute;
   right: 200px;
   bottom: 200px;
@@ -126,23 +136,83 @@ body {
 
 #timer {
   width: 300px;
-  height: 100px;
+  height: 110px;
 
   background-color: rgba(0, 0, 0, 0.5);
 
-  z-index: 10;
+  z-index: 2;
 
   position: absolute;
   left: 50%;
   margin-left: -150px;
 
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 40px;
-  color: white;
+  font-family: Digits, Courier, monospace;
+  font-size: 60px;
+  color: greenyellow;
   text-align: center;
-  line-height: 50px;
+  line-height: 70px;
 }
 
 #timer > p {
+  font-size: 30px;
+  line-height: 30px;
+}
+
+.dialog {
+  width: 800px;
+  height: 500px;
+
+  z-index: 4;
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  margin-left: -400px;
+  margin-top: -250px;
+
+  background-color: aqua;
+
+  padding: 50px;
+  box-sizing: border-box;
+
+  font-family: 'F1';
+
+  text-align: center;
+}
+
+.dialog h1 {
+  font-size: 40px;
+  text-align: center;
+  border-bottom: 2px solid black;
+  margin-bottom: 50px;
+  line-height: 60px;
+}
+
+.dialog p {
   font-size: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.dialog button {
+  border: none;
+  width: 100px;
+  height: 40px;
+  margin: 0 auto;
+  background: #0069ed;
+  color: #ffffff;
+  cursor: pointer;
+  text-align: center;
+}
+
+.overlay {
+  width: 100vw;
+  height: 100vh;
+
+  z-index: 3;
+
+  position: absolute;
+
+  background-color: rgba(0, 0, 0, 0.5);
 }
