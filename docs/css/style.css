@@ -32,12 +32,13 @@ body {
 .car {
   background-image: url('../img/car.png');
   background-size: contain;
-  width: 150px;
+  background-repeat: no-repeat;
+  width: 200px;
   height: 300px;
 
   position: absolute;
   left: 50%;
-  margin-left: -75px;
+  margin-left: -100px;
 
   top: -300px;
 }
@@ -52,32 +53,40 @@ body {
   bottom: 200px;
 
   display: flex;
-  align-content: center;
+  align-content: space-between;
+  align-items: center;
 }
 
 .tire {
-  background-color: black;
-  width: 10px;
-  height: 30px;
-  margin: 20px;
+  background-image: url('../img/tire.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 
-  position: relative;
+  width: 40px;
+  height: 40px;
+
+  flex: 1;
 }
 
 .player {
-  width: 50px;
-  height: 50px;
-  background-color: yellow;
+  width: 70px;
+  height: 70px;
+  background-image: url('../img/player.png');
+  background-size: contain;
+  background-repeat: no-repeat;
 
   position: absolute;
 }
 
 .has-tire {
-  background-color: green;
+  background-image: url('../img/player-tire.png');
 }
 
-.has-gasoline {
-  background-color: brown;
+.has-gasoline:before {
+  content: '•';
+  font-family: 'Courier New', Courier, monospace;
+  color: white;
 }
 
 #gasoline {

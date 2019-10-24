@@ -181,6 +181,7 @@ var Gas = (function () {
 var Player = (function () {
     function Player() {
         var _this = this;
+        this.flipped = false;
         this.speedX = 0;
         this.speedY = 0;
         this.posX = 0;
@@ -191,9 +192,13 @@ var Player = (function () {
         document.body.appendChild(this._element);
         window.addEventListener('keydown', function (e) { return _this.onKeyDown(e); });
         window.addEventListener('keyup', function (e) { return _this.onKeyUp(e); });
+        setInterval(function () {
+            _this.flipped = !_this.flipped;
+        }, 500);
     }
     Player.prototype.update = function () {
-        this._element.style.transform = "translate(" + (this.posX += this.speedX) + "px, " + (this.posY += this.speedY) + "px)";
+        var scaleX = this.flipped ? '-1' : '1';
+        this._element.style.transform = "translate(" + (this.posX += this.speedX) + "px, " + (this.posY += this.speedY) + "px) scaleX(" + scaleX + ")";
         this.currentTire ? this._element.classList.add('has-tire') : this._element.classList.remove('has-tire');
         this.hasGasoline ? this._element.classList.add('has-gasoline') : this._element.classList.remove('has-gasoline');
     };

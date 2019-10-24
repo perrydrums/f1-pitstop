@@ -1,6 +1,7 @@
 class Player {
 
   private _element:HTMLElement;
+  private flipped:boolean = false;
 
   private speedX:number = 0;
   private speedY:number = 0;
@@ -18,6 +19,10 @@ class Player {
 
     window.addEventListener('keydown', (e:KeyboardEvent) => this.onKeyDown(e));
     window.addEventListener('keyup', (e:KeyboardEvent) => this.onKeyUp(e));
+
+    setInterval(() => {
+      this.flipped = !this.flipped
+    }, 500);
   }
 
   /**
@@ -25,7 +30,8 @@ class Player {
    */
   public update():void {
     // Movement.
-    this._element.style.transform = `translate(${this.posX += this.speedX}px, ${this.posY += this.speedY}px)`;
+    const scaleX = this.flipped ? '-1' : '1';
+    this._element.style.transform = `translate(${this.posX += this.speedX}px, ${this.posY += this.speedY}px) scaleX(${scaleX})`;
 
     // Check for tire.
     this.currentTire ? this._element.classList.add('has-tire') : this._element.classList.remove('has-tire');
